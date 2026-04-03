@@ -1,0 +1,36 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && 
+        (request.auth.token.email == "ballssigma2234@gmail.com" && request.auth.token.email_verified == true);
+    }
+
+    function isValidBooking(data) {
+      return data.fullName is string && data.fullName.size() > 0 && data.fullName.size() < 100 &&
+             data.email is string && data.email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$") &&
+             data.serviceType is string &&
+             data.preferredDate is string &&
+             data.socialPlatform is string &&
+             data.socialUsername is string &&
+             data.createdAt is string;
+    }
+
+    match /bookings/{bookingId} {
+      // Anyone can create a booking (public lead form)
+      allow create: if isValidBooking(request.resource.data);
+      // Only admin can read/manage bookings
+      allow read, update, delete: if isAdmin();
+    }
+
+    match /config/admin {
+      // Only admin can access config
+      allow read, write: if isAdmin();
+    }
+  }
+}

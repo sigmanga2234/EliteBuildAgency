@@ -1,0 +1,37 @@
+{
+  "entities": {
+    "Booking": {
+      "title": "Booking",
+      "description": "A strategy call booking lead.",
+      "type": "object",
+      "properties": {
+        "fullName": { "type": "string", "description": "Full name of the lead" },
+        "email": { "type": "string", "format": "email", "description": "Email address" },
+        "serviceType": { "type": "string", "description": "Type of service requested" },
+        "preferredDate": { "type": "string", "format": "date", "description": "Preferred date for the call" },
+        "socialPlatform": { "type": "string", "description": "Social media platform" },
+        "socialUsername": { "type": "string", "description": "Social media username" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When the booking was created" }
+      },
+      "required": ["fullName", "email", "serviceType", "preferredDate", "socialPlatform", "socialUsername", "createdAt"]
+    },
+    "AdminConfig": {
+      "title": "AdminConfig",
+      "description": "Configuration for the admin, including Google Calendar tokens.",
+      "type": "object",
+      "properties": {
+        "googleTokens": { "type": "object", "description": "OAuth2 tokens for Google Calendar API" }
+      }
+    }
+  },
+  "firestore": {
+    "bookings": {
+      "schema": { "$ref": "Booking" },
+      "description": "Collection of strategy call bookings."
+    },
+    "config/admin": {
+      "schema": { "$ref": "AdminConfig" },
+      "description": "Admin configuration and secrets."
+    }
+  }
+}
